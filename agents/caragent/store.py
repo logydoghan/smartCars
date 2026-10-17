@@ -15,9 +15,11 @@ COLUMNS = (
     "slug", "year", "make", "model", "body", "powertrain", "price_from", "headline", "verdict",
     "agreement_level", "critic_score", "critic_consensus", "critics", "owner_overview",
     "owner_themes", "complaint_count", "complaint_components", "crash_count", "fire_count",
-    "injury_count", "recalls", "disagreements", "agreements", "updated_at",
+    "injury_count", "recalls", "disagreements", "agreements", "photo", "updated_at",
 )
-JSON_COLUMNS = {"critics", "owner_themes", "complaint_components", "recalls", "disagreements", "agreements"}
+JSON_COLUMNS = {
+    "critics", "owner_themes", "complaint_components", "recalls", "disagreements", "agreements", "photo",
+}
 
 
 @dataclass
@@ -27,6 +29,8 @@ class CarReport:
     owners: OwnersResult
     record: SafetyRecord
     comparison: Comparison
+    # A Wikimedia Commons photo with its credit details, or None if none passed the check.
+    photo: dict | None = None
 
 
 def to_record(report: CarReport, now: datetime | None = None) -> dict:
@@ -78,6 +82,7 @@ def to_record(report: CarReport, now: datetime | None = None) -> dict:
         ],
         "disagreements": [d.model_dump() for d in comparison.disagreements],
         "agreements": comparison.agreements,
+        "photo": report.photo,
         "updated_at": (now or datetime.now(timezone.utc)).isoformat(),
     }
 
@@ -100,9 +105,15 @@ def save_to_database(database_url: str, record: dict) -> None:
     import psycopg
     from psycopg.types.json import Jsonb
 
-    values = [Jsonb(record[c]) if c in JSON_COLUMNS else record[c] for c in COLUMNS]
+    # None stays SQL null (not JSON null), so a missing photo keeps the stored one.
+    values = [Jsonb(record[c]) if c in JSON_COLUMNS and record[c] is not None else record[c] for c in COLUMNS]
     placeholders = ", ".join(["%s"] * len(COLUMNS))
-    updates = ", ".join(f"{c} = excluded.{c}" for c in COLUMNS if c != "slug")
+    # A refresh that finds no photo keeps the one the car already has.
+    updates = ", ".join(
+        f"{c} = coalesce(excluded.{c}, cars.{c})" if c == "photo" else f"{c} = excluded.{c}"
+        for c in COLUMNS
+        if c != "slug"
+    )
     # prepare_threshold=None keeps this working through Supabase's transaction pooler too.
     with psycopg.connect(database_url, prepare_threshold=None) as conn:
         conn.execute(

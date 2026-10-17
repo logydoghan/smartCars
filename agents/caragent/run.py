@@ -22,6 +22,7 @@ from .critics import gather_critics
 from .llm import ClaudeLLM, LLMError, StructuredLLM
 from .nhtsa import fetch_safety_record
 from .owners import summarize_owners
+from .photos import find_photo
 from .store import CarReport, last_updated, save_to_database, to_record, write_json
 
 log = logging.getLogger("caragent")
@@ -40,7 +41,8 @@ def build_report(settings: Settings, llm: StructuredLLM, car: Car) -> CarReport:
     record = fetch_safety_record(car)
     critics = gather_critics(llm, car, settings.max_searches, settings.max_fetches)
     owners = summarize_owners(llm, car, record.complaints[: settings.max_complaints])
-    return CarReport(car, critics, owners, record, compare(llm, car, critics, owners, record))
+    comparison = compare(llm, car, critics, owners, record)
+    return CarReport(car, critics, owners, record, comparison, find_photo(llm, car))
 
 
 def main(argv: list[str] | None = None) -> int:

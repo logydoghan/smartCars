@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { AgreementBadge, SourceStats } from "@/components/Badges";
+import { CarComments, CarSave } from "@/components/CarAccountParts";
+import { CarPhotoImage, PhotoCredit } from "@/components/CarPhoto";
 import { DisagreementCard } from "@/components/Disagreements";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { getCar, getCars } from "@/lib/data";
@@ -63,13 +65,22 @@ async function CarContent({ params }: Pick<PageProps<"/cars/[slug]">, "params">)
             <AgreementBadge level={car.agreement_level} />
             <span>Updated {formatDate(car.updated_at)}</span>
           </div>
-        </div>
-        <div className="flex flex-col gap-4 self-end">
-          <SourceStats car={car} size="lg" />
+          <Suspense>
+            <CarSave slug={car.slug} />
+          </Suspense>
           <div className="rounded-xl bg-soft p-5.5">
             <h2 className="pb-1.5 text-[13px] font-semibold uppercase tracking-wider text-muted">The short version</h2>
             <p className="text-[16px] leading-relaxed text-body">{car.verdict}</p>
           </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <figure className="flex flex-col gap-1.5">
+            <CarPhotoImage car={car} sizes="(min-width: 1240px) 590px, (min-width: 860px) 50vw, 100vw" eager />
+            <figcaption>
+              <PhotoCredit car={car} />
+            </figcaption>
+          </figure>
+          <SourceStats car={car} size="lg" />
         </div>
       </section>
 
@@ -108,6 +119,15 @@ async function CarContent({ params }: Pick<PageProps<"/cars/[slug]">, "params">)
         <OwnersSection car={car} />
         <RecallsSection car={car} />
       </div>
+
+      <section id="comments" aria-labelledby="comments-heading" className="flex max-w-[820px] scroll-mt-6 flex-col gap-4">
+        <h2 id="comments-heading" className={h2}>
+          Owners and shoppers talk
+        </h2>
+        <Suspense fallback={<p className="text-muted">Loading comments…</p>}>
+          <CarComments slug={car.slug} />
+        </Suspense>
+      </section>
 
     </div>
   );
