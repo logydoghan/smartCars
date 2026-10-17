@@ -1,0 +1,14 @@
+{
+  "Count": 2,
+  "Message": "Results returned successfully",
+  "results": [
+    {"Manufacturer": "Example Motors", "NHTSACampaignNumber": "24V100000", "parkIt": false,
+     "parkOutSide": false, "ReportReceivedDate": "15/02/2024", "Component": "BACK OVER PREVENTION",
+     "Summary": "The rearview camera image may not display.", "Consequence": "Reduced rear visibility.",
+     "Remedy": "Dealers will update the software, free of charge.", "ModelYear": "2024"},
+    {"Manufacturer": "Example Motors", "NHTSACampaignNumber": "24V200000", "parkIt": true,
+     "ReportReceivedDate": "06/05/2024", "Component": "FUEL SYSTEM, GASOLINE",
+     "Summary": "A fuel line may leak.", "Consequence": "Increased risk of fire.",
+     "Remedy": "Dealers will replace the fuel line.", "ModelYear": "2024"}
+  ]
+}

@@ -1,0 +1,27 @@
+[project]
+name = "caragent"
+version = "0.1.0"
+description = "Agents that gather critic reviews, owner complaints and recalls for SmartCars"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=1.15",
+    "httpx>=0.28",
+    "psycopg[binary]>=3.2",
+    "pydantic>=2.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+caragent = "caragent.run:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["caragent*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

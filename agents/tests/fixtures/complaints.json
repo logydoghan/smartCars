@@ -1,0 +1,19 @@
+{
+  "count": 4,
+  "message": "Results returned successfully",
+  "results": [
+    {"odiNumber": 11550001, "manufacturer": "Example Motors", "crash": false, "fire": false,
+     "numberOfInjuries": 0, "numberOfDeaths": 0, "dateOfIncident": "01/02/2024",
+     "dateComplaintFiled": "01/05/2024", "components": "POWER TRAIN",
+     "summary": "THE TRANSMISSION SHUDDERS WHEN PULLING AWAY FROM A STOP."},
+    {"odiNumber": 11550002, "manufacturer": "Example Motors", "crash": true, "fire": false,
+     "numberOfInjuries": 1, "numberOfDeaths": 0, "dateOfIncident": "03/10/2024",
+     "dateComplaintFiled": "03/12/2024", "components": "POWER TRAIN,ENGINE",
+     "summary": "HESITATION THEN A LURCH FORWARD AT LOW SPEED."},
+    {"odiNumber": 11550003, "manufacturer": "Example Motors", "crash": false, "fire": false,
+     "numberOfInjuries": 0, "numberOfDeaths": 0, "dateOfIncident": "",
+     "dateComplaintFiled": "02/01/2024", "components": "ELECTRICAL SYSTEM",
+     "summary": "THE SCREEN GOES BLACK AND THE BACKUP CAMERA DOES NOT SHOW."},
+    {"odiNumber": "not-a-number", "components": "UNKNOWN OR OTHER", "summary": "BROKEN ROW"}
+  ]
+}
