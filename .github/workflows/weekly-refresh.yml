@@ -1,0 +1,38 @@
+name: Weekly car refresh
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # 06:00 UTC every Monday
+  workflow_dispatch:
+    inputs:
+      car:
+        description: "Refresh just this car (slug, e.g. 2024-toyota-rav4). Leave empty for the cars that are due."
+        required: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: agents
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: agents/pyproject.toml
+      - run: pip install .
+      - name: Refresh car pages
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CAR: ${{ inputs.car }}
+        run: caragent --json cars.json ${CAR:+--car "$CAR"}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cars
+          path: agents/cars.json
+          if-no-files-found: ignore
