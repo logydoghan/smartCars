@@ -31,7 +31,7 @@ function recall(campaign: string, reported: string, component: string, summary: 
   return { campaign, reported, component, summary, consequence: "", remedy, park_it: false };
 }
 
-const base = { critic_consensus: "", updated_at: "2026-10-13T06:00:00Z", fire_count: 0 };
+const base = { critic_consensus: "", updated_at: "2026-10-13T06:00:00Z", fire_count: 0, photo: null };
 
 export const SAMPLE_CARS: CarPage[] = [
   {

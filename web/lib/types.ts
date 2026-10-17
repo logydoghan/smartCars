@@ -46,6 +46,17 @@ export interface Disagreement {
   strength: "strong" | "some";
 }
 
+/** A free photo from Wikimedia Commons, with the credit its license requires. */
+export interface CarPhoto {
+  url: string;
+  width: number;
+  height: number;
+  page_url: string;
+  author: string;
+  license: string;
+  license_url: string;
+}
+
 export interface CarPage {
   slug: string;
   year: number;
@@ -70,6 +81,7 @@ export interface CarPage {
   recalls: Recall[];
   disagreements: Disagreement[];
   agreements: string[];
+  photo: CarPhoto | null;
   updated_at: string;
 }
 

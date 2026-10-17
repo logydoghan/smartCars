@@ -26,3 +26,14 @@ export function formatDate(iso: string): string {
 export function recallUrl(campaign: string): string {
   return `https://www.nhtsa.gov/recalls?nhtsaId=${campaign}`;
 }
+
+export function formatCommentTime(iso: string): string {
+  return `${new Date(iso).toLocaleString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+  })} UTC`;
+}
